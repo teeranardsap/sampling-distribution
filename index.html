@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>คาบที่ 3: การแจกแจงการสุ่มตัวอย่าง (Sampling Distribution)</title>
+    <!-- โหลดไลบรารีกราฟและการคำนวณสถิติผ่าน CDN (ไม่ต้องติดตั้งลงเครื่อง) -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.6/jstat.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 1300px; margin: auto; }
+        .header { background: #1f3a60; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
+        .grid-layout { display: flex; gap: 20px; }
+        .sidebar { flex: 1; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); height: fit-content; }
+        .main-content { flex: 3; }
+        .metrics-panel { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .metric-card { background: white; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .metric-title { font-size: 13px; color: #666; font-weight: bold; }
+        .metric-value { font-size: 24px; color: #1f3a60; font-weight: bold; margin-top: 5px; }
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .chart-box { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .control-group { margin-bottom: 18px; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
+        select, input[type="range"], input[type="number"] { width: 100%; box-sizing: border-box; }
+        .slider-val { float: right; color: #007bff; font-weight: bold; }
+        .interactive-zone { background: #e8f4fd; border-left: 5px solid #007bff; padding: 15px; border-radius: 5px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>📊 สื่อการสอน คาบที่ 3: การแจกแจงการสุ่มตัวอย่าง (Sampling Distribution)</h2>
+        <p>สาธิตทฤษฎีบทแนวโน้มเข้าสู่ศูนย์กลาง (Central Limit Theorem: CLT) เชิงโต้ตอบ</p>
+    </div>
+
+    <div class="grid-layout">
+        <!-- แถบควบคุม Sidebar -->
+        <div class="sidebar">
+            <h3 style="margin-top:0;">⚙️ ปรับพารามิเตอร์</h3>
+            
+            <div class="control-group">
+                <label>1. รูปแบบประชากรเดิม:</label>
+                <select id="distType" onchange="runSimulation()">
+                    <option value="normal">ปกติ (Normal)</option>
+                    <option value="skewed" selected>เบ้ขวาจัด (Skewed - Expo)</option>
+                    <option value="uniform">สม่ำเสมอ (Uniform)</option>
+                    <option value="bimodal">สองยอด (Bimodal)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>ขนาดตัวอย่างในแต่ละชุด (n): <span id="nVal" class="slider-val">30</span></label>
+                <input type="range" id="sampleSize" min="1" max="150" value="30" oninput="updateSliders(); runSimulation();">
+            </div>
+
+            <div class="control-group">
+                <label>จำนวนชุดตัวอย่างที่สุ่ม (k): <span id="kVal" class="slider-val">1000</span></label>
+                <input type="range" id="sampleCount" min="200" max="3000" step="100" value="1000" oninput="updateSliders(); runSimulation();">
+            </div>
+
+            <hr>
+            <div class="control-group">
+                <label>คำนวณโจทย์: หาค่า P(X̄ > c)</label>
+                <label style="font-weight: normal; font-size: 12px;">กำหนดจุดตัด (c):</label>
+                <input type="number" id="cutoffInput" value="5" step="0.5" oninput="calculateProb()">
+                <div id="probResult" style="margin-top: 10px; font-size: 13px; font-weight: bold; color: #d9534f;"></div>
+            </div>
+        </div>
+
+        <!-- หน้าแสดงผลหลัก -->
+        <div class="main-content">
+            <div class="metrics-panel">
+                <div class="metric-card">
+                    <div class="metric-title">μ ประชากร</div>
+                    <div class="metric-value" id="popMean">0.00</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Mean of X̄ (จากการสุ่ม)</div>
+                    <div class="metric-value" id="simMean">0.00</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">SE ทฤษฎี (σ/√n)</div>
+                    <div class="metric-value" id="theoSE">0.00</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">SE จำลอง (s_X̄)</div>
+                    <div class="metric-value" id="simSE">0.00</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-box">
+                    <h4 style="margin: 0 0 10px 0;">1. ประชากรเดิม (Population)</h4>
+                    <div id="popPlot" style="height: 350px;"></div>
+                </div>
+                <div class="chart-box">
+                    <h4 style="margin: 0 0 10px 0;">2. การแจกแจงของ X̄ (Sampling Dist.)</h4>
+                    <div id="samplePlot" style="height: 350px;"></div>
+                </div>
+            </div>
+
+            <div class="interactive-zone">
+                <h4 style="margin-top: 0;">💡 คำถามชวนคิดสำหรับอาจารย์ใช้ถามนักศึกษา:</h4>
+                <ol style="margin-bottom: 0; padding-left: 20px; font-size: 14px; line-height: 1.6;">
+                    <li>แม้ประชากรเดิมจะ <b>"เบ้ขวาจัด"</b> แต่เมื่อเราเลื่อนสไลเดอร์ <b>n เพิ่มขึ้นเรื่อยๆ (เช่น n ≥ 30)</b> กราฟทางขวาเปลี่ยนรูปร่างเป็นอย่างไร? (ทฤษฎีบท CLT)</li>
+                    <li>เมื่อขนาดตัวอย่าง <b>n</b> ใหญ่ขึ้นเรื่อยๆ ค่า Standard Error (ความกว้างของกราฟขวามือ) มีแนวโน้มเป็นอย่างไร?</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentPopMean = 0;
+    let currentTheoSE = 0;
+
+    function updateSliders() {
+        document.getElementById('nVal').innerText = document.getElementById('sampleSize').value;
+        document.getElementById('kVal').innerText = document.getElementById('sampleCount').value;
+    }
+
+    function generatePopulation(type, N=10000) {
+        let pop = [];
+        for (let i = 0; i < N; i++) {
+            if (type === 'normal') pop.push(jStat.normal.sample(50, 10));
+            else if (type === 'skewed') pop.push(jStat.exponential.sample(0.2));
+            else if (type === 'uniform') pop.push(jStat.uniform.sample(10, 90));
+            else if (type === 'bimodal') pop.push(Math.random() > 0.5 ? jStat.normal.sample(30, 5) : jStat.normal.sample(70, 6));
+        }
+        return pop;
+    }
+
+    function runSimulation() {
+        const type = document.getElementById('distType').value;
+        const n = parseInt(document.getElementById('sampleSize').value);
+        const k = parseInt(document.getElementById('sampleCount').value);
+
+        const population = generatePopulation(type, 10000);
+        const popMean = jStat.mean(population);
+        const popStd = jStat.stdev(population);
+
+        let sampleMeans = [];
+        for (let i = 0; i < k; i++) {
+            let sample = [];
+            for (let j = 0; j < n; j++) {
+                sample.push(population[Math.floor(Math.random() * population.length)]);
+            }
+            sampleMeans.push(jStat.mean(sample));
+        }
+
+        const simMean = jStat.mean(sampleMeans);
+        const simSE = jStat.stdev(sampleMeans);
+        const theoSE = popStd / Math.sqrt(n);
+
+        currentPopMean = popMean;
+        currentTheoSE = theoSE;
+
+        document.getElementById('popMean').innerText = popMean.toFixed(2);
+        document.getElementById('simMean').innerText = simMean.toFixed(2);
+        document.getElementById('theoSE').innerText = theoSE.toFixed(2);
+        document.getElementById('simSE').innerText = simSE.toFixed(2);
+
+        // วาดกราฟประชากร
+        Plotly.newPlot('popPlot', [{
+            x: population.slice(0, 3000),
+            type: 'histogram',
+            histnorm: 'probability density',
+            marker: { color: '#4A90E2' }
+        }], {
+            margin: { t: 10, r: 10, l: 40, b: 40 },
+            xaxis: { title: 'ค่าของ X' },
+            yaxis: { title: 'ความหนาแน่น' }
+        });
+
+        // สร้างเส้นโค้งปกติทางทฤษฎีเปรียบเทียบ
+        let minX = Math.min(...sampleMeans);
+        let maxX = Math.max(...sampleMeans);
+        let xCurve = [];
+        let yCurve = [];
+        for (let x = minX; x <= maxX; x += (maxX - minX)/100) {
+            xCurve.push(x);
+            yCurve.push(jStat.normal.pdf(x, popMean, theoSE));
+        }
+
+        // วาดกราฟ X̄
+        Plotly.newPlot('samplePlot', [
+            {
+                x: sampleMeans,
+                type: 'histogram',
+                histnorm: 'probability density',
+                marker: { color: '#50E3C2' },
+                name: 'การสุ่มจริง'
+            },
+            {
+                x: xCurve,
+                y: yCurve,
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: 'red', width: 2 },
+                name: 'ทฤษฎีโค้งปกติ'
+            }
+        ], {
+            margin: { t: 10, r: 10, l: 40, b: 40 },
+            xaxis: { title: 'ค่าเฉลี่ยตัวอย่าง (X̄)' },
+            yaxis: { title: 'ความหนาแน่น' },
+            showlegend: true,
+            legend: { x: 0.7, y: 1 }
+        });
+
+        calculateProb();
+    }
+
+    function calculateProb() {
+        const c = parseFloat(document.getElementById('cutoffInput').value);
+        if (isNaN(c) || currentTheoSE === 0) return;
+        const z = (c - currentPopMean) / currentTheoSE;
+        const prob = (1 - jStat.normal.cdf(z, 0, 1)) * 100;
+        document.getElementById('probResult').innerHTML = `
+            Z = ${z.toFixed(2)} <br>
+            P(X̄ > ${c}) = ${prob.toFixed(2)}%
+        `;
+    }
+
+    // เริ่มทำงานครั้งแรกทันที
+    updateSliders();
+    runSimulation();
+</script>
+
+</body>
+</html>
