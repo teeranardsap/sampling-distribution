@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>การแจกแจงการสุ่มตัวอย่าง (Sampling Distribution)</title>
-    <!-- โหลดไลบรารีกราฟ -->
+    <!-- Libraries CDN -->
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.6/jstat.min.js"></script>
-    <!-- โหลด MathJax เพื่อแปลงสูตรคณิตศาสตร์ให้สวยงาม ห้ามลบเด็ดขาด -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -32,7 +31,7 @@
         }
 
         .container {
-            max-width: 1380px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -74,7 +73,7 @@
         }
 
         .sidebar {
-            flex: 1.15;
+            flex: 1.25;
             background: var(--card-bg);
             padding: 20px;
             border-radius: 12px;
@@ -84,7 +83,7 @@
         }
 
         .main-content {
-            flex: 2.85;
+            flex: 2.75;
         }
 
         .metrics-grid {
@@ -157,7 +156,7 @@
             color: #102a43;
         }
 
-        select, input[type="range"], input[type="number"] {
+        select, input[type="number"] {
             width: 100%;
             box-sizing: border-box;
             padding: 8px;
@@ -167,10 +166,28 @@
             font-size: 13.5px;
         }
 
-        .slider-disp {
-            float: right;
-            color: var(--accent);
-            font-weight: 700;
+        .inline-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .inline-inputs > div {
+            flex: 1;
+        }
+
+        .dual-control {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .dual-control input[type="range"] {
+            flex: 2;
+        }
+
+        .dual-control input[type="number"] {
+            flex: 1;
+            padding: 6px;
         }
 
         .dist-explain-box {
@@ -183,8 +200,12 @@
             line-height: 1.5;
         }
 
-        .dist-explain-box b {
-            color: var(--primary);
+        .param-sub-box {
+            background-color: #f0fdf4;
+            border: 1px dashed #86efac;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 8px;
         }
 
         .learn-box {
@@ -200,12 +221,8 @@
             margin: 0 0 10px 0;
             font-size: 15px;
             color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        /* กล่องตัวอย่างโจทย์แบบพรีเมียม */
         .example-box {
             background: #ffffff;
             border: 2px solid #bbf7d0;
@@ -241,7 +258,6 @@
             text-align: center;
         }
 
-        /* Tooltip */
         .math-tag {
             display: inline-flex;
             align-items: center;
@@ -303,7 +319,7 @@
 <div class="container">
     <div class="header">
         <h1>การแจกแจงการสุ่มตัวอย่าง (Sampling Distribution)</h1>
-        <p>เรียนรู้ผ่านการจำลองเชิงโต้ตอบ: ทำไมการหยิบตัวอย่างเพียงเล็กน้อย ถึงบอกความจริงของประชากรทั้งหมดได้?</p>
+        <p>เครื่องมือจำลองเชิงโต้ตอบ: พิมพ์ปรับค่าพารามิเตอร์ประชากรและขนาดตัวอย่างได้เองอย่างอิสระ</p>
     </div>
 
     <div class="intro-banner">
@@ -311,47 +327,59 @@
     </div>
 
     <div class="grid-layout">
-        <!-- Sidebar -->
+        <!-- Sidebar แผงควบคุมที่พิมพ์ได้เอง -->
         <div class="sidebar">
-            <h3 style="margin-top:0; color: var(--primary); font-size: 16px;">⚙️ แผงควบคุม</h3>
+            <h3 style="margin-top:0; color: var(--primary); font-size: 16px;">⚙️ กำหนดค่าพารามิเตอร์</h3>
 
             <div class="form-group">
                 <label>1. เลือกลักษณะของประชากรเดิม:</label>
-                <select id="distSelect" onchange="changeDist(); runSim();">
+                <select id="distSelect" onchange="changeDistUI(); runSim();">
+                    <option value="normal">การแจกแจงปกติ (Normal Distribution)</option>
                     <option value="skewed" selected>เบ้ขวาจัด (Skewed - Exponential)</option>
-                    <option value="normal">การแจกแจงปกติ (Normal - ระฆังคว่ำ)</option>
                     <option value="uniform">สม่ำเสมอเท่ากันหมด (Uniform)</option>
                     <option value="bimodal">สองยอด (Bimodal - ปนกัน 2 กลุ่ม)</option>
                 </select>
 
+                <!-- แผงสำหรับพิมพ์ตัวเลขพารามิเตอร์ของแต่ละรูปแบบได้เอง -->
+                <div id="paramControlBox" class="param-sub-box">
+                    <!-- จะถูกเติมอัตโนมัติด้วย JavaScript ตามที่เลือก -->
+                </div>
+
                 <div id="distExpl" class="dist-explain-box">กำลังโหลดคำอธิบาย...</div>
             </div>
 
+            <!-- ขนาดตัวอย่าง n: ทั้งพิมพ์และเลื่อนได้ -->
             <div class="form-group">
                 <label>
                     2. ขนาดตัวอย่างในแต่ละชุด 
                     (<span class="math-tag" tabindex="0">n
                         <span class="tooltip-card"><b>ขนาดตัวอย่าง (n):</b> จำนวนข้อมูลที่เราสุ่มตักขึ้นมาคำนวณค่าเฉลี่ยใน 1 รอบ เช่น สุ่มสัมภาษณ์คน 30 คนต่อรอบ</span>
-                    </span>): 
-                    <span id="nTxt" class="slider-disp">30</span>
+                    </span>):
                 </label>
-                <input type="range" id="nRange" min="1" max="120" value="30" oninput="syncLabels(); runSim();">
-                <small style="color:#627d98; font-size:11.5px;">ลองเลื่อนจาก 1 ไปหา 30 เพื่อดูทฤษฎี CLT</small>
+                <div class="dual-control">
+                    <input type="range" id="nRange" min="1" max="150" value="30" oninput="syncInputs('nRange', 'nNum'); runSim();">
+                    <input type="number" id="nNum" min="1" max="500" value="30" oninput="syncInputs('nNum', 'nRange'); runSim();">
+                </div>
+                <small style="color:#627d98; font-size:11.5px;">พิมพ์ตัวเลขหรือเลื่อนสไลเดอร์เพื่อดูทฤษฎี CLT</small>
             </div>
 
+            <!-- จำนวนรอบ k: ทั้งพิมพ์และเลื่อนได้ -->
             <div class="form-group">
                 <label>
                     3. จำนวนชุดที่สุ่มซ้ำ 
                     (<span class="math-tag" tabindex="0">k
                         <span class="tooltip-card"><b>จำนวนรอบที่สุ่ม (k):</b> เราทดลองตักซุ่มกี่ครั้ง เพื่อนำค่าเฉลี่ยของแต่ละครั้งมาวาดเป็นกราฟฝั่งขวา</span>
-                    </span>): 
-                    <span id="kTxt" class="slider-disp">1000</span>
+                    </span>):
                 </label>
-                <input type="range" id="kRange" min="200" max="2500" step="100" value="1000" oninput="syncLabels(); runSim();">
+                <div class="dual-control">
+                    <input type="range" id="kRange" min="200" max="3000" step="100" value="1000" oninput="syncInputs('kRange', 'kNum'); runSim();">
+                    <input type="number" id="kNum" min="100" max="5000" step="100" value="1000" oninput="syncInputs('kNum', 'kRange'); runSim();">
+                </div>
             </div>
 
             <hr style="border:0; border-top: 1px dashed var(--border-color); margin: 18px 0;">
 
+            <!-- ส่วนคำนวณโจทย์สด -->
             <div class="form-group">
                 <label>
                     🧮 คำนวณความน่าจะเป็น:
@@ -359,7 +387,7 @@
                         <span class="tooltip-card"><b>P(X̄ > c):</b> ความน่าจะเป็นที่ค่าเฉลี่ยของกลุ่มตัวอย่างที่สุ่มได้ จะมีค่าเกินกว่าเกณฑ์ c ที่เรากำหนด</span>
                     </span>
                 </label>
-                <label style="font-weight: normal; font-size: 12px; margin-bottom: 4px;">ระบุเกณฑ์ที่สนใจ (c):</label>
+                <label style="font-weight: normal; font-size: 12px; margin-bottom: 4px;">พิมพ์ระบุเกณฑ์ที่สนใจ (c):</label>
                 <input type="number" id="cutoffVal" value="5.5" step="0.5" oninput="calcProb()">
                 <div id="probBox" style="margin-top:10px; font-size:12.5px; line-height: 1.6;"></div>
             </div>
@@ -408,7 +436,7 @@
             <div class="charts-grid">
                 <div class="chart-box">
                     <h3>1. ประชากรต้นแบบ (Population: X)</h3>
-                    <div class="chart-sub">แสดงค่าของข้อมูลรายบุคคลทั้งหมด (รูปร่างจะบิดเบี้ยวอย่างไรก็ได้)</div>
+                    <div class="chart-sub">แสดงค่าของข้อมูลรายบุคคลทั้งหมด (ตามพารามิเตอร์ที่คุณพิมพ์กำหนด)</div>
                     <div id="popChart" style="height: 320px;"></div>
                 </div>
 
@@ -419,17 +447,17 @@
                 </div>
             </div>
 
-            <!-- กล่องทดลองทำตาม 3 สเต็ป -->
+            <!-- กล่องทดลอง 3 สเต็ป -->
             <div class="learn-box" style="background:#f8fafc; border-left: 4px solid var(--accent);">
-                <h4>🧪 3 สเต็ปทดลองเล่นเพื่อเข้าใจทฤษฎี CLT:</h4>
+                <h4 style="margin: 0 0 10px 0;">🧪 3 สเต็ปทดลองเล่นเพื่อเข้าใจทฤษฎี CLT:</h4>
                 <ol style="margin: 0; padding-left: 20px; font-size: 13.5px; line-height: 1.7;">
-                    <li>เลือกประชากรเป็น <b>"เบ้ขวาจัด"</b> แล้วปรับ \(n = 1\) ➔ กราฟขวาจะมีรูปร่างเบ้ตามประชากรเด๊ะๆ</li>
-                    <li>ค่อยๆ เลื่อน \(n\) เพิ่มเป็น <b>\(5 \rightarrow 15 \rightarrow 30\)</b> ➔ สังเกตว่ากราฟขวาจะเริ่มดัดตัวเองกลายเป็น <b>รูประฆังคว่ำสมมาตร</b> อัตโนมัติ (นี่คือ Central Limit Theorem!)</li>
-                    <li>ลองเลื่อน \(n\) ไปถึง <b>\(100\)</b> ➔ สังเกตว่าระฆังคว่ำจะบีบตัวแคบลงเรื่อยๆ แปลว่ายิ่งสุ่มเยอะ ความผิดพลาดยิ่งลดลง</li>
+                    <li>เลือกประชากรเป็น <b>"เบ้ขวาจัด"</b> แล้วพิมพ์หรือเลื่อน \(n = 1\) ➔ กราฟขวาจะมีรูปร่างเบ้ตามประชากรเด๊ะๆ</li>
+                    <li>ลองพิมพ์ \(n = 30\) หรือ \(50\) ➔ สังเกตว่ากราฟขวาจะเริ่มดัดตัวเองกลายเป็น <b>รูประฆังคว่ำสมมาตร</b> อัตโนมัติ (นี่คือ Central Limit Theorem!)</li>
+                    <li>ลองพิมพ์ \(n = 100\) ➔ สังเกตว่าระฆังคว่ำจะบีบตัวแคบลงเรื่อยๆ แปลว่ายิ่งสุ่มเยอะ ความผิดพลาดยิ่งลดลง</li>
                 </ol>
             </div>
 
-            <!-- กล่องตัวอย่างโจทย์จริง + มีรูปประกอบ + แสดงวิธีคิดชัดเจน -->
+            <!-- กล่องตัวอย่างโจทย์จริง -->
             <div class="example-box">
                 <h3 style="margin: 0 0 8px 0; color: #166534; font-size: 17px;">
                     🧋 ตัวอย่างโจทย์จริง: การสุ่มตรวจน้ำหนักชานมไข่มุก (พร้อมภาพประกอบ)
@@ -439,7 +467,6 @@
                 </p>
 
                 <div class="example-grid">
-                    <!-- วิธีทำทีละขั้น -->
                     <div class="example-solution">
                         <b>📝 เฉลยขั้นตอนวิธีคิดอย่างละเอียด:</b><br>
                         <b>ขั้นที่ 1: คำนวณความคลาดเคลื่อนมาตรฐาน (SE)</b><br>
@@ -454,7 +481,6 @@
                         <b>💡 สรุปความหมาย:</b> โอกาสที่ผู้จัดการจะสุ่มเจอชานม 25 แก้วที่มีน้ำหนักเฉลี่ยสูงเกิน 508 กรัม มีเพียงแค่ <b>2.28%</b> เท่านั้น (เป็นเหตุการณ์ที่เกิดขึ้นได้ยากมาก)
                     </div>
 
-                    <!-- กราฟประกอบตัวอย่าง -->
                     <div class="example-chart">
                         <div style="font-size: 12px; font-weight: bold; color: #166534; margin-bottom: 5px;">
                             แผนภาพการแจกแจงของน้ำหนักเฉลี่ย (\(\bar{X}\))
@@ -473,37 +499,99 @@
     let currentTheoSE = 0;
 
     const distInfoData = {
-        skewed: "<b>📌 รูปร่าง:</b> หางยื่นยาวไปทางขวา ข้อมูลส่วนใหญ่กองอยู่ฝั่งซ้าย (ค่าน้อย)<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดเมื่อข้อมูลมีขีดจำกัดล่างที่ 0 แต่ไม่มีขีดจำกัดบน<br><b>🏢 ตัวอย่างจริง:</b> <i>รายได้ของคนไทย</i> (คนส่วนใหญ่เงินเดือน 15,000-30,000 บาท มีมหาเศรษฐีไม่กี่คนดึงหางยาวไปหลักล้าน), <i>ระยะเวลารอคอยอาหาร</i>",
         normal: "<b>📌 รูปร่าง:</b> ระฆังคว่ำสมบูรณ์ ข้อมูล 68% กองอยู่รอบค่าเฉลี่ย<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดจากปรากฏการณ์ธรรมชาติที่มีปัจจัยสุ่มเล็กๆ หลายตัวส่งผลร่วมกัน<br><b>🏢 ตัวอย่างจริง:</b> <i>ส่วนสูงของนักศึกษา</i>, <i>น้ำหนักของผลส้ม</i>, <i>คะแนนสอบมาตรฐานระดับประเทศ</i>",
+        skewed: "<b>📌 รูปร่าง:</b> หางยื่นยาวไปทางขวา ข้อมูลส่วนใหญ่กองอยู่ฝั่งซ้าย (ค่าน้อย)<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดเมื่อข้อมูลมีขีดจำกัดล่างที่ 0 แต่ไม่มีขีดจำกัดบน<br><b>🏢 ตัวอย่างจริง:</b> <i>รายได้ของคนไทย</i> (คนส่วนใหญ่เงินเดือน 15,000-30,000 บาท มีมหาเศรษฐีไม่กี่คนดึงหางยาวไปหลักล้าน), <i>ระยะเวลารอคอยอาหาร</i>",
         uniform: "<b>📌 รูปร่าง:</b> สี่เหลี่ยมผืนผ้าแบนราบ ทุกตัวเลขมีโอกาสเกิดเท่ากันหมด<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดจากระบบที่ถูกออกแบบให้มีความน่าจะเป็นเท่ากันทุกจุด<br><b>🏢 ตัวอย่างจริง:</b> <i>การทอดลูกเต๋า 1-6</i>, <i>การจับฉลากหมายเลข</i>, <i>นาทีที่ลูกค้าเดินเข้าร้านสะดวกซื้อแบบสุ่ม</i>",
         bimodal: "<b>📌 รูปร่าง:</b> มีภูเขา 2 ลูก (ยอดคู่) มีร่องตรงกลาง<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดจากการนำข้อมูลของประชากร 2 กลุ่มที่มีพฤติกรรมต่างกันมารวมในชุดเดียวกัน<br><b>🏢 ตัวอย่างจริง:</b> <i>ยอดขายร้านอาหาร</i> (มียอดสูงตอนเที่ยงและเย็น บ่ายแทบไม่มีคน), <i>ส่วนสูงประชากรเมื่อรวมชายและหญิงเข้าด้วยกัน</i>"
     };
 
-    function changeDist() {
-        const val = document.getElementById('distSelect').value;
-        document.getElementById('distExpl').innerHTML = distInfoData[val];
+    // อัปเดตช่องให้พิมพ์พารามิเตอร์ตามประเภทการแจกแจงที่เลือก
+    function changeDistUI() {
+        const type = document.getElementById('distSelect').value;
+        const box = document.getElementById('paramControlBox');
+        document.getElementById('distExpl').innerHTML = distInfoData[type];
+
+        if (type === 'normal') {
+            box.innerHTML = `
+                <div class="inline-inputs">
+                    <div>
+                        <label style="font-size:12px;">ค่าเฉลี่ย (μ):</label>
+                        <input type="number" id="normMean" value="50" step="1" oninput="runSim()">
+                    </div>
+                    <div>
+                        <label style="font-size:12px;">ส่วนเบี่ยงเบน (σ):</label>
+                        <input type="number" id="normStd" value="10" min="1" step="1" oninput="runSim()">
+                    </div>
+                </div>
+            `;
+        } else if (type === 'skewed') {
+            box.innerHTML = `
+                <div>
+                    <label style="font-size:12px;">Scale (λ หรือค่าเฉลี่ยช่วงเวลา):</label>
+                    <input type="number" id="expoScale" value="5" min="0.5" step="0.5" oninput="runSim()">
+                    <small style="color:#666; font-size:11px;">ยิ่งใส่เลขมาก ข้อมูลยิ่งทอดยาวไปทางขวา</small>
+                </div>
+            `;
+        } else if (type === 'uniform') {
+            box.innerHTML = `
+                <div class="inline-inputs">
+                    <div>
+                        <label style="font-size:12px;">ค่าต่ำสุด (a):</label>
+                        <input type="number" id="uniMin" value="10" step="1" oninput="runSim()">
+                    </div>
+                    <div>
+                        <label style="font-size:12px;">ค่าสูงสุด (b):</label>
+                        <input type="number" id="uniMax" value="90" step="1" oninput="runSim()">
+                    </div>
+                </div>
+            `;
+        } else if (type === 'bimodal') {
+            box.innerHTML = `
+                <div class="inline-inputs">
+                    <div>
+                        <label style="font-size:12px;">ยอดที่ 1 (μ₁):</label>
+                        <input type="number" id="biMu1" value="30" step="1" oninput="runSim()">
+                    </div>
+                    <div>
+                        <label style="font-size:12px;">ยอดที่ 2 (μ₂):</label>
+                        <input type="number" id="biMu2" value="70" step="1" oninput="runSim()">
+                    </div>
+                </div>
+            `;
+        }
     }
 
-    function syncLabels() {
-        document.getElementById('nTxt').innerText = document.getElementById('nRange').value;
-        document.getElementById('kTxt').innerText = document.getElementById('kRange').value;
+    function syncInputs(fromId, toId) {
+        document.getElementById(toId).value = document.getElementById(fromId).value;
     }
 
     function buildPopulation(type, size=10000) {
         let arr = [];
-        for (let i = 0; i < size; i++) {
-            if (type === 'normal') arr.push(jStat.normal.sample(50, 10));
-            else if (type === 'skewed') arr.push(jStat.exponential.sample(0.2));
-            else if (type === 'uniform') arr.push(jStat.uniform.sample(10, 90));
-            else if (type === 'bimodal') arr.push(Math.random() > 0.5 ? jStat.normal.sample(30, 5) : jStat.normal.sample(70, 6));
+        if (type === 'normal') {
+            const m = parseFloat(document.getElementById('normMean')?.value || 50);
+            const s = parseFloat(document.getElementById('normStd')?.value || 10);
+            for (let i = 0; i < size; i++) arr.push(jStat.normal.sample(m, s));
+        } else if (type === 'skewed') {
+            const scale = parseFloat(document.getElementById('expoScale')?.value || 5);
+            for (let i = 0; i < size; i++) arr.push(jStat.exponential.sample(1 / scale));
+        } else if (type === 'uniform') {
+            const a = parseFloat(document.getElementById('uniMin')?.value || 10);
+            const b = parseFloat(document.getElementById('uniMax')?.value || 90);
+            for (let i = 0; i < size; i++) arr.push(jStat.uniform.sample(Math.min(a, b), Math.max(a, b)));
+        } else if (type === 'bimodal') {
+            const m1 = parseFloat(document.getElementById('biMu1')?.value || 30);
+            const m2 = parseFloat(document.getElementById('biMu2')?.value || 70);
+            for (let i = 0; i < size; i++) {
+                arr.push(Math.random() > 0.5 ? jStat.normal.sample(m1, 5) : jStat.normal.sample(m2, 6));
+            }
         }
         return arr;
     }
 
     function runSim() {
         const type = document.getElementById('distSelect').value;
-        const n = parseInt(document.getElementById('nRange').value);
-        const k = parseInt(document.getElementById('kRange').value);
+        const n = parseInt(document.getElementById('nNum').value) || 30;
+        const k = parseInt(document.getElementById('kNum').value) || 1000;
 
         const pop = buildPopulation(type, 10000);
         const popMean = jStat.mean(pop);
@@ -596,13 +684,11 @@
                 • ความน่าจะเป็น <b>P(X̄ > ${c}) = ${prob.toFixed(2)}%</b>
             </div>
         `;
-        // ให้ MathJax แปลงสูตรในกล่องคำนวณสดด้วย
         if (window.MathJax && MathJax.typeset) {
             MathJax.typeset(["#probBox"]);
         }
     }
 
-    // วาดกราฟตัวอย่างชานมไข่มุก
     function drawExamplePlot() {
         const mu = 500;
         const se = 4;
@@ -613,7 +699,6 @@
             y.push(jStat.normal.pdf(v, mu, se));
         }
 
-        // พื้นที่แรเงาขวาที่ X̄ > 508 (Z > 2)
         let xFill = x.filter(v => v >= 508);
         let yFill = xFill.map(v => jStat.normal.pdf(v, mu, se));
 
@@ -657,9 +742,8 @@
         }, { responsive: true, displayModeBar: false });
     }
 
-    // เริ่มทำงานเมื่อเปิดเว็บ
-    changeDist();
-    syncLabels();
+    // เริ่มระบบ
+    changeDistUI();
     runSim();
     drawExamplePlot();
 </script>
