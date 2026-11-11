@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>การแจกแจงการสุ่มตัวอย่าง (Sampling Distribution)</title>
-    <!-- โหลดไลบรารีกราฟและการคำนวณสถิติ -->
+    <!-- โหลดไลบรารีกราฟ -->
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.6/jstat.min.js"></script>
+    <!-- โหลด MathJax เพื่อแปลงสูตรคณิตศาสตร์ให้สวยงาม ห้ามลบเด็ดขาด -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -33,7 +36,6 @@
             margin: 0 auto;
         }
 
-        /* เฮดเดอร์ */
         .header {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
@@ -56,7 +58,6 @@
             opacity: 0.9;
         }
 
-        /* แถบเกริ่นนำปูพื้นฐาน */
         .intro-banner {
             background-color: #e0f2fe;
             border-left: 5px solid #0284c7;
@@ -86,7 +87,6 @@
             flex: 2.85;
         }
 
-        /* แผงตัวเลขสรุป */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -117,7 +117,6 @@
             margin-top: 4px;
         }
 
-        /* แผงกราฟ */
         .charts-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -146,7 +145,6 @@
             min-height: 36px;
         }
 
-        /* ฟอร์มและตัวควบคุม */
         .form-group {
             margin-bottom: 16px;
         }
@@ -175,7 +173,6 @@
             font-weight: 700;
         }
 
-        /* การ์ดคำอธิบายประชากร */
         .dist-explain-box {
             background-color: #f7fafc;
             border: 1px solid #e2e8f0;
@@ -190,7 +187,6 @@
             color: var(--primary);
         }
 
-        /* กล่องตัวอย่างและสเต็ปเรียนรู้ */
         .learn-box {
             background: #ffffff;
             border: 1px solid var(--border-color);
@@ -209,7 +205,43 @@
             gap: 8px;
         }
 
-        /* สไตล์ Tooltip สำหรับสัญลักษณ์คณิตศาสตร์ */
+        /* กล่องตัวอย่างโจทย์แบบพรีเมียม */
+        .example-box {
+            background: #ffffff;
+            border: 2px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+        }
+
+        .example-grid {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .example-solution {
+            flex: 1.2;
+            background: #f0fdf4;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #22c55e;
+            font-size: 13.5px;
+            line-height: 1.7;
+        }
+
+        .example-chart {
+            flex: 1;
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #dcfce7;
+            text-align: center;
+        }
+
+        /* Tooltip */
         .math-tag {
             display: inline-flex;
             align-items: center;
@@ -269,19 +301,17 @@
 <body>
 
 <div class="container">
-    <!-- Header: เอาคำว่า คาบที่ 3 ออกตามคำขอ -->
     <div class="header">
         <h1>การแจกแจงการสุ่มตัวอย่าง (Sampling Distribution)</h1>
         <p>เรียนรู้ผ่านการจำลองเชิงโต้ตอบ: ทำไมการหยิบตัวอย่างเพียงเล็กน้อย ถึงบอกความจริงของประชากรทั้งหมดได้?</p>
     </div>
 
-    <!-- แถบปูพื้นฐานแบบเห็นภาพทันทีสำหรับคนไม่มีพื้นฐาน -->
     <div class="intro-banner">
-        💡 <b>ปูพื้นฐานใน 1 นาที (หลักการชิมน้ำซุป):</b> นึกภาพว่าประชากรคือ <b>"น้ำแกงหม้อใหญ่"</b> เราไม่จำเป็นต้องดื่มน้ำแกงจนหมดหม้อเพื่อรู้รสชาติ แค่ใช้ช้อนตักขึ้นมาชิมสักช้อน <b>(สุ่มตัวอย่างขนาด n)</b> ก็รู้แล้ว! แต่ถ้าช้อนเล็กเกินไป รสชาติอาจยังไม่ทั่วถึง... หน้านี้จะแสดงให้เห็นว่า <b>ถ้าช้อนมีขนาดใหญ่พอ (n ≥ 30)</b> ผลลัพธ์ที่ได้จะเสถียร แม่นยำ และมีรูปร่างระฆังคว่ำเสมอ!
+        💡 <b>ปูพื้นฐานใน 1 นาที (หลักการชิมน้ำซุป):</b> นึกภาพว่าประชากรคือ <b>"น้ำแกงหม้อใหญ่"</b> เราไม่จำเป็นต้องดื่มน้ำแกงจนหมดหม้อเพื่อรู้รสชาติ แค่ใช้ช้อนตักขึ้นมาชิมสักช้อน <b>(สุ่มตัวอย่างขนาด \(n\))</b> ก็รู้แล้ว! แต่ถ้าช้อนเล็กเกินไป รสชาติอาจยังไม่ทั่วถึง... หน้านี้จะแสดงให้เห็นว่า <b>ถ้าช้อนมีขนาดใหญ่พอ (\(n \ge 30\))</b> ผลลัพธ์ที่ได้จะเสถียร แม่นยำ และมีรูปร่างระฆังคว่ำเสมอ!
     </div>
 
     <div class="grid-layout">
-        <!-- แถบด้านข้าง Sidebar -->
+        <!-- Sidebar -->
         <div class="sidebar">
             <h3 style="margin-top:0; color: var(--primary); font-size: 16px;">⚙️ แผงควบคุม</h3>
 
@@ -294,7 +324,6 @@
                     <option value="bimodal">สองยอด (Bimodal - ปนกัน 2 กลุ่ม)</option>
                 </select>
 
-                <!-- กล่องอธิบายว่าข้อมูลแบบไหนทำให้กราฟเป็นแบบนี้ -->
                 <div id="distExpl" class="dist-explain-box">กำลังโหลดคำอธิบาย...</div>
             </div>
 
@@ -323,7 +352,6 @@
 
             <hr style="border:0; border-top: 1px dashed var(--border-color); margin: 18px 0;">
 
-            <!-- ส่วนคำนวณโจทย์สด -->
             <div class="form-group">
                 <label>
                     🧮 คำนวณความน่าจะเป็น:
@@ -337,9 +365,8 @@
             </div>
         </div>
 
-        <!-- เนื้อหาฝั่งขวา Main Content -->
+        <!-- Main Content -->
         <div class="main-content">
-            <!-- แผง Metric สรุปตัวเลขพร้อม Math Tooltips -->
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-label">
@@ -378,7 +405,6 @@
                 </div>
             </div>
 
-            <!-- กราฟทั้ง 2 ฝั่ง พร้อมกรอบแท่งชัดเจน -->
             <div class="charts-grid">
                 <div class="chart-box">
                     <h3>1. ประชากรต้นแบบ (Population: X)</h3>
@@ -397,24 +423,43 @@
             <div class="learn-box" style="background:#f8fafc; border-left: 4px solid var(--accent);">
                 <h4>🧪 3 สเต็ปทดลองเล่นเพื่อเข้าใจทฤษฎี CLT:</h4>
                 <ol style="margin: 0; padding-left: 20px; font-size: 13.5px; line-height: 1.7;">
-                    <li>เลือกประชากรเป็น <b>"เบ้ขวาจัด"</b> แล้วปรับ $n = 1$ ➔ กราฟขวาจะมีรูปร่างเบ้ตามประชากรเด๊ะๆ</li>
-                    <li>ค่อยๆ เลื่อน $n$ เพิ่มเป็น <b>$5 \rightarrow 15 \rightarrow 30$</b> ➔ สังเกตว่ากราฟขวาจะเริ่มดัดตัวเองกลายเป็น <b>รูประฆังคว่ำสมมาตร</b> อัตโนมัติ (นี่คือ Central Limit Theorem!)</li>
-                    <li>ลองเลื่อน $n$ ไปถึง <b>$100$</b> ➔ สังเกตว่าระฆังคว่ำจะบีบตัวแคบลงเรื่อยๆ แปลว่ายิ่งสุ่มเยอะ ความผิดพลาดยิ่งลดลง</li>
+                    <li>เลือกประชากรเป็น <b>"เบ้ขวาจัด"</b> แล้วปรับ \(n = 1\) ➔ กราฟขวาจะมีรูปร่างเบ้ตามประชากรเด๊ะๆ</li>
+                    <li>ค่อยๆ เลื่อน \(n\) เพิ่มเป็น <b>\(5 \rightarrow 15 \rightarrow 30\)</b> ➔ สังเกตว่ากราฟขวาจะเริ่มดัดตัวเองกลายเป็น <b>รูประฆังคว่ำสมมาตร</b> อัตโนมัติ (นี่คือ Central Limit Theorem!)</li>
+                    <li>ลองเลื่อน \(n\) ไปถึง <b>\(100\)</b> ➔ สังเกตว่าระฆังคว่ำจะบีบตัวแคบลงเรื่อยๆ แปลว่ายิ่งสุ่มเยอะ ความผิดพลาดยิ่งลดลง</li>
                 </ol>
             </div>
 
-            <!-- กล่องตัวอย่างโจทย์จริงพร้อมวิธีทำทีละขั้น -->
-            <div class="learn-box" style="background:#f0fdf4; border: 1px solid #bbf7d0;">
-                <h4 style="color:#166534;">📖 ตัวอย่างโจทย์จริง: การสุ่มตรวจน้ำหนักแก้วชานมไข่มุก</h4>
-                <div style="font-size: 13.5px; line-height: 1.6;">
-                    <p style="margin: 0 0 8px 0;"><b>สถานการณ์:</b> ร้านชานมระบุว่าน้ำหนักเฉลี่ยของแก้วคือ $\mu = 500$ กรัม มีส่วนเบี่ยงเบนมาตรฐาน $\sigma = 20$ กรัม หากผู้จัดการร้านสุ่มตรวจชานมจำนวน $n = 25$ แก้ว จงหาความน่าจะเป็นที่น้ำหนักเฉลี่ยของกลุ่มตัวอย่างนี้จะมากกว่า $508$ กรัม ($P(\bar{X} > 508)$)?</p>
-                    
-                    <div style="background:white; padding:12px; border-radius:8px; border-left:3px solid #22c55e; font-size:13px;">
-                        <b>ขั้นตอนการคิด:</b><br>
-                        1. <b>หาความคลาดเคลื่อนมาตรฐาน (SE):</b> $SE = \frac{\sigma}{\sqrt{n}} = \frac{20}{\sqrt{25}} = \frac{20}{5} = 4$ กรัม<br>
-                        2. <b>แปลงเป็นค่าคะแนนมาตรฐาน Z:</b> $Z = \frac{\bar{X} - \mu}{SE} = \frac{508 - 500}{4} = +2.0$<br>
-                        3. <b>เปิดตารางหาความน่าจะเป็น:</b> พื้นที่ส่วนที่ $Z > 2.0$ เท่ากับ <b>2.28%</b><br>
-                        <b>สรุป:</b> มีโอกาสเพียง 2.28% เท่านั้นที่ผู้จัดการจะสุ่มได้แก้วที่ได้น้ำหนักเฉลี่ยเกิน 508 กรัม
+            <!-- กล่องตัวอย่างโจทย์จริง + มีรูปประกอบ + แสดงวิธีคิดชัดเจน -->
+            <div class="example-box">
+                <h3 style="margin: 0 0 8px 0; color: #166534; font-size: 17px;">
+                    🧋 ตัวอย่างโจทย์จริง: การสุ่มตรวจน้ำหนักชานมไข่มุก (พร้อมภาพประกอบ)
+                </h3>
+                <p style="margin: 0; font-size: 13.5px;">
+                    <b>สถานการณ์:</b> ร้านชานมระบุว่าน้ำหนักเฉลี่ยของแก้วคือ \(\mu = 500\) กรัม ส่วนเบี่ยงเบนมาตรฐาน \(\sigma = 20\) กรัม หากผู้จัดการร้านสุ่มตรวจชานมจำนวน \(n = 25\) แก้ว จงหาความน่าจะเป็นที่น้ำหนักเฉลี่ยของกลุ่มตัวอย่างนี้จะมากกว่า \(508\) กรัม หรือหาค่า \(P(\bar{X} > 508)\)?
+                </p>
+
+                <div class="example-grid">
+                    <!-- วิธีทำทีละขั้น -->
+                    <div class="example-solution">
+                        <b>📝 เฉลยขั้นตอนวิธีคิดอย่างละเอียด:</b><br>
+                        <b>ขั้นที่ 1: คำนวณความคลาดเคลื่อนมาตรฐาน (SE)</b><br>
+                        \[ SE = \frac{\sigma}{\sqrt{n}} = \frac{20}{\sqrt{25}} = \frac{20}{5} = 4 \text{ กรัม} \]
+                        <small style="color:#166534;">(แปลว่าค่าเฉลี่ยของกลุ่มตัวอย่างจะแกว่งรอบๆ 500 อยู่ประมาณ ±4 กรัม)</small><br><br>
+
+                        <b>ขั้นที่ 2: แปลงเป็นคะแนนมาตรฐาน Z-score</b><br>
+                        \[ Z = \frac{\bar{X} - \mu}{SE} = \frac{508 - 500}{4} = \frac{8}{4} = +2.00 \]
+                        
+                        <b>ขั้นที่ 3: เปิดตารางหาความน่าจะเป็น</b><br>
+                        จากตารางการแจกแจงปกติมาตรฐาน พื้นที่ฝั่งขวาที่ \(Z > 2.00\) คือ <b>0.0228 หรือ 2.28%</b><br><br>
+                        <b>💡 สรุปความหมาย:</b> โอกาสที่ผู้จัดการจะสุ่มเจอชานม 25 แก้วที่มีน้ำหนักเฉลี่ยสูงเกิน 508 กรัม มีเพียงแค่ <b>2.28%</b> เท่านั้น (เป็นเหตุการณ์ที่เกิดขึ้นได้ยากมาก)
+                    </div>
+
+                    <!-- กราฟประกอบตัวอย่าง -->
+                    <div class="example-chart">
+                        <div style="font-size: 12px; font-weight: bold; color: #166534; margin-bottom: 5px;">
+                            แผนภาพการแจกแจงของน้ำหนักเฉลี่ย (\(\bar{X}\))
+                        </div>
+                        <div id="examplePlot" style="height: 230px;"></div>
                     </div>
                 </div>
             </div>
@@ -427,7 +472,6 @@
     let currentPopMean = 0;
     let currentTheoSE = 0;
 
-    // ข้อมูลคำอธิบายเชิงลึกของประชากรทั้ง 4 แบบ
     const distInfoData = {
         skewed: "<b>📌 รูปร่าง:</b> หางยื่นยาวไปทางขวา ข้อมูลส่วนใหญ่กองอยู่ฝั่งซ้าย (ค่าน้อย)<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดเมื่อข้อมูลมีขีดจำกัดล่างที่ 0 แต่ไม่มีขีดจำกัดบน<br><b>🏢 ตัวอย่างจริง:</b> <i>รายได้ของคนไทย</i> (คนส่วนใหญ่เงินเดือน 15,000-30,000 บาท มีมหาเศรษฐีไม่กี่คนดึงหางยาวไปหลักล้าน), <i>ระยะเวลารอคอยอาหาร</i>",
         normal: "<b>📌 รูปร่าง:</b> ระฆังคว่ำสมบูรณ์ ข้อมูล 68% กองอยู่รอบค่าเฉลี่ย<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดจากปรากฏการณ์ธรรมชาติที่มีปัจจัยสุ่มเล็กๆ หลายตัวส่งผลร่วมกัน<br><b>🏢 ตัวอย่างจริง:</b> <i>ส่วนสูงของนักศึกษา</i>, <i>น้ำหนักของผลส้ม</i>, <i>คะแนนสอบมาตรฐานระดับประเทศ</i>",
@@ -486,14 +530,14 @@
         document.getElementById('theoSEVal').innerText = theoSE.toFixed(2);
         document.getElementById('simSEVal').innerText = simSE.toFixed(2);
 
-        // 1. กราฟประชากร (มีกรอบแท่งชัดเจน)
+        // 1. กราฟประชากร
         Plotly.newPlot('popChart', [{
             x: pop.slice(0, 3000),
             type: 'histogram',
             histnorm: 'probability density',
             marker: {
                 color: '#4A90E2',
-                line: { color: '#102a43', width: 1.2 } /* กรอบแท่งกราฟ */
+                line: { color: '#102a43', width: 1.2 }
             }
         }], {
             margin: { t: 10, r: 10, l: 35, b: 35 },
@@ -511,7 +555,7 @@
             curveY.push(jStat.normal.pdf(x, popMean, theoSE));
         }
 
-        // 2. กราฟค่าเฉลี่ยตัวอย่าง (มีกรอบแท่งชัดเจน + ซ้อนเส้นโค้งปกติ)
+        // 2. กราฟค่าเฉลี่ยตัวอย่าง
         Plotly.newPlot('sampleChart', [
             {
                 x: means,
@@ -519,7 +563,7 @@
                 histnorm: 'probability density',
                 marker: {
                     color: '#50E3C2',
-                    line: { color: '#0d7a63', width: 1.2 } /* กรอบแท่งกราฟ */
+                    line: { color: '#0d7a63', width: 1.2 }
                 },
                 name: 'จากการสุ่มจริง'
             },
@@ -548,17 +592,76 @@
         const prob = (1 - jStat.normal.cdf(z, 0, 1)) * 100;
         document.getElementById('probBox').innerHTML = `
             <div style="background:#fffaf0; border:1px solid #feebc8; padding:8px 12px; border-radius:6px; color:#7b341e;">
-                • สูตร: $Z = \\frac{\\bar{X} - \\mu}{SE} = \\frac{${c} - ${currentPopMean.toFixed(2)}}{${currentTheoSE.toFixed(2)}}$<br>
-                • แปลงเป็นคะแนนมาตรฐาน <b>Z = ${z.toFixed(2)}</b><br>
+                • แทนค่า: \\(Z = \\frac{${c} - ${currentPopMean.toFixed(2)}}{${currentTheoSE.toFixed(2)}} = \\) <b>${z.toFixed(2)}</b><br>
                 • ความน่าจะเป็น <b>P(X̄ > ${c}) = ${prob.toFixed(2)}%</b>
             </div>
         `;
+        // ให้ MathJax แปลงสูตรในกล่องคำนวณสดด้วย
+        if (window.MathJax && MathJax.typeset) {
+            MathJax.typeset(["#probBox"]);
+        }
     }
 
-    // ทำงานทันที
+    // วาดกราฟตัวอย่างชานมไข่มุก
+    function drawExamplePlot() {
+        const mu = 500;
+        const se = 4;
+        let x = [];
+        let y = [];
+        for (let v = 485; v <= 515; v += 0.2) {
+            x.push(v);
+            y.push(jStat.normal.pdf(v, mu, se));
+        }
+
+        // พื้นที่แรเงาขวาที่ X̄ > 508 (Z > 2)
+        let xFill = x.filter(v => v >= 508);
+        let yFill = xFill.map(v => jStat.normal.pdf(v, mu, se));
+
+        Plotly.newPlot('examplePlot', [
+            {
+                x: x, y: y,
+                type: 'scatter', mode: 'lines',
+                line: { color: '#166534', width: 2 },
+                name: 'การแจกแจง X̄'
+            },
+            {
+                x: [508, ...xFill, xFill[xFill.length - 1]],
+                y: [0, ...yFill, 0],
+                fill: 'toself',
+                fillcolor: 'rgba(234, 88, 12, 0.45)',
+                line: { color: 'transparent' },
+                name: 'P(X̄ > 508) = 2.28%'
+            }
+        ], {
+            margin: { t: 15, r: 10, l: 30, b: 30 },
+            xaxis: { title: 'น้ำหนักเฉลี่ย (กรัม)' },
+            yaxis: { showticklabels: false },
+            showlegend: false,
+            shapes: [
+                {
+                    type: 'line',
+                    x0: 508, y0: 0, x1: 508, y1: jStat.normal.pdf(508, mu, se),
+                    line: { color: '#ea580c', width: 2, dash: 'dash' }
+                }
+            ],
+            annotations: [
+                {
+                    x: 509, y: 0.02,
+                    text: '2.28%',
+                    showarrow: true,
+                    arrowhead: 2,
+                    ax: 20, ay: -20,
+                    font: { color: '#ea580c', size: 12, weight: 'bold' }
+                }
+            ]
+        }, { responsive: true, displayModeBar: false });
+    }
+
+    // เริ่มทำงานเมื่อเปิดเว็บ
     changeDist();
     syncLabels();
     runSim();
+    drawExamplePlot();
 </script>
 
 </body>
