@@ -15,303 +15,49 @@
             --primary: #102a43;
             --primary-light: #243b53;
             --accent: #0b69a3;
-            --highlight: #008060;
             --bg: #f0f4f8;
             --card-bg: #ffffff;
             --border-color: #d9e2ec;
         }
+        body { font-family: 'Sarabun', sans-serif; background-color: var(--bg); margin: 0; padding: 16px; color: #334e68; line-height: 1.6; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 24px; border-radius: 12px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 12px rgba(16, 42, 67, 0.15); }
+        .header h1 { margin: 0; font-size: 26px; font-weight: 700; }
+        .intro-banner { background-color: #e0f2fe; border-left: 5px solid #0284c7; padding: 14px 18px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; color: #0369a1; }
+        .grid-layout { display: flex; gap: 20px; }
+        .sidebar { flex: 1.25; background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid var(--border-color); height: fit-content; }
+        .main-content { flex: 2.75; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+        .metric-card { background: var(--card-bg); padding: 12px; border-radius: 10px; text-align: center; border: 1px solid var(--border-color); border-top: 4px solid var(--accent); box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
+        .metric-label { font-size: 12.5px; font-weight: 600; color: #627d98; }
+        .metric-val { font-size: 24px; font-weight: 700; color: var(--primary); margin-top: 4px; }
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+        .chart-box { background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+        .chart-box h3 { margin: 0 0 6px 0; font-size: 15px; color: var(--primary); }
+        .chart-sub { font-size: 12px; color: #829ab1; margin-bottom: 10px; min-height: 36px; }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-weight: 600; font-size: 13.5px; margin-bottom: 6px; color: #102a43; }
+        select, input[type="number"] { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #bcccdc; border-radius: 6px; font-family: inherit; font-size: 13.5px; }
+        .dual-control { display: flex; gap: 10px; align-items: center; }
+        .dual-control input[type="range"] { flex: 2; }
+        .dual-control input[type="number"] { flex: 1; padding: 6px; }
+        .dist-explain-box { background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-top: 10px; font-size: 12.5px; line-height: 1.5; }
+        .param-sub-box { background-color: #f0fdf4; border: 1px dashed #86efac; padding: 10px; border-radius: 8px; margin-top: 8px; }
+        .inline-inputs { display: flex; gap: 10px; }
+        .inline-inputs > div { flex: 1; }
+        .learn-box { background: #ffffff; border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; margin-top: 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+        
+        /* กล่องตัวอย่างโจทย์เปลี่ยนอัตโนมัติ */
+        .example-box { background: #ffffff; border: 2px solid #86efac; border-radius: 12px; padding: 20px; margin-top: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
+        .example-grid { display: flex; gap: 20px; align-items: center; margin-top: 15px; }
+        .example-solution { flex: 1.25; background: #f0fdf4; padding: 16px; border-radius: 8px; border-left: 4px solid #16a34a; font-size: 13.5px; line-height: 1.7; }
+        .example-chart { flex: 0.95; background: #ffffff; padding: 10px; border-radius: 8px; border: 1px solid #dcfce7; text-align: center; }
 
-        body {
-            font-family: 'Sarabun', sans-serif;
-            background-color: var(--bg);
-            margin: 0;
-            padding: 16px;
-            color: #334e68;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 24px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(16, 42, 67, 0.15);
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 26px;
-            font-weight: 700;
-        }
-
-        .header p {
-            margin: 8px 0 0 0;
-            font-size: 14.5px;
-            opacity: 0.9;
-        }
-
-        .intro-banner {
-            background-color: #e0f2fe;
-            border-left: 5px solid #0284c7;
-            padding: 14px 18px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            color: #0369a1;
-        }
-
-        .grid-layout {
-            display: flex;
-            gap: 20px;
-        }
-
-        .sidebar {
-            flex: 1.25;
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            height: fit-content;
-        }
-
-        .main-content {
-            flex: 2.75;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 18px;
-        }
-
-        .metric-card {
-            background: var(--card-bg);
-            padding: 12px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            border-top: 4px solid var(--accent);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-        }
-
-        .metric-label {
-            font-size: 12.5px;
-            font-weight: 600;
-            color: #627d98;
-        }
-
-        .metric-val {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: 4px;
-        }
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-            margin-bottom: 18px;
-        }
-
-        .chart-box {
-            background: var(--card-bg);
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-        }
-
-        .chart-box h3 {
-            margin: 0 0 6px 0;
-            font-size: 15px;
-            color: var(--primary);
-        }
-
-        .chart-sub {
-            font-size: 12px;
-            color: #829ab1;
-            margin-bottom: 10px;
-            min-height: 36px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            font-size: 13.5px;
-            margin-bottom: 6px;
-            color: #102a43;
-        }
-
-        select, input[type="number"] {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 8px;
-            border: 1px solid #bcccdc;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 13.5px;
-        }
-
-        .inline-inputs {
-            display: flex;
-            gap: 10px;
-        }
-
-        .inline-inputs > div {
-            flex: 1;
-        }
-
-        .dual-control {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .dual-control input[type="range"] {
-            flex: 2;
-        }
-
-        .dual-control input[type="number"] {
-            flex: 1;
-            padding: 6px;
-        }
-
-        .dist-explain-box {
-            background-color: #f7fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 10px;
-            font-size: 12.5px;
-            line-height: 1.5;
-        }
-
-        .param-sub-box {
-            background-color: #f0fdf4;
-            border: 1px dashed #86efac;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 8px;
-        }
-
-        .learn-box {
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 18px;
-            margin-top: 18px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-        }
-
-        .learn-box h4 {
-            margin: 0 0 10px 0;
-            font-size: 15px;
-            color: var(--primary);
-        }
-
-        .example-box {
-            background: #ffffff;
-            border: 2px solid #bbf7d0;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-        }
-
-        .example-grid {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            margin-top: 15px;
-        }
-
-        .example-solution {
-            flex: 1.2;
-            background: #f0fdf4;
-            padding: 16px;
-            border-radius: 8px;
-            border-left: 4px solid #22c55e;
-            font-size: 13.5px;
-            line-height: 1.7;
-        }
-
-        .example-chart {
-            flex: 1;
-            background: #ffffff;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #dcfce7;
-            text-align: center;
-        }
-
-        .math-tag {
-            display: inline-flex;
-            align-items: center;
-            cursor: help;
-            border-bottom: 1.5px dashed var(--accent);
-            color: var(--primary);
-            font-weight: 700;
-            position: relative;
-        }
-
-        .math-tag::after {
-            content: " ⓘ";
-            font-size: 11px;
-            color: var(--accent);
-            margin-left: 2px;
-        }
-
-        .math-tag:hover .tooltip-card,
-        .math-tag:focus .tooltip-card {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .tooltip-card {
-            visibility: hidden;
-            opacity: 0;
-            position: absolute;
-            bottom: 130%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #102a43;
-            color: #ffffff;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 400;
-            width: 260px;
-            white-space: normal;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-            z-index: 9999;
-            transition: opacity 0.2s;
-            pointer-events: none;
-            line-height: 1.5;
-        }
-
-        .tooltip-card::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 6px solid transparent;
-            border-top-color: #102a43;
-        }
+        .math-tag { display: inline-flex; align-items: center; cursor: help; border-bottom: 1.5px dashed var(--accent); color: var(--primary); font-weight: 700; position: relative; }
+        .math-tag::after { content: " ⓘ"; font-size: 11px; color: var(--accent); margin-left: 2px; }
+        .math-tag:hover .tooltip-card, .math-tag:focus .tooltip-card { visibility: visible; opacity: 1; }
+        .tooltip-card { visibility: hidden; opacity: 0; position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%); background: #102a43; color: #ffffff; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 400; width: 260px; white-space: normal; box-shadow: 0 6px 16px rgba(0,0,0,0.25); z-index: 9999; transition: opacity 0.2s; pointer-events: none; line-height: 1.5; }
+        .tooltip-card::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: #102a43; }
     </style>
 </head>
 <body>
@@ -319,41 +65,35 @@
 <div class="container">
     <div class="header">
         <h1>การแจกแจงการสุ่มตัวอย่าง (Sampling Distribution)</h1>
-        <p>เครื่องมือจำลองเชิงโต้ตอบ: พิมพ์ปรับค่าพารามิเตอร์ประชากรและขนาดตัวอย่างได้เองอย่างอิสระ</p>
+        <p>เครื่องมือจำลองเชิงโต้ตอบ: สาธิตทฤษฎีบทแนวโน้มเข้าสู่ศูนย์กลาง (CLT) พร้อมโจทย์ตัวอย่างเปลี่ยนตามกราฟ</p>
     </div>
 
     <div class="intro-banner">
-        💡 <b>ปูพื้นฐานใน 1 นาที (หลักการชิมน้ำซุป):</b> นึกภาพว่าประชากรคือ <b>"น้ำแกงหม้อใหญ่"</b> เราไม่จำเป็นต้องดื่มน้ำแกงจนหมดหม้อเพื่อรู้รสชาติ แค่ใช้ช้อนตักขึ้นมาชิมสักช้อน <b>(สุ่มตัวอย่างขนาด \(n\))</b> ก็รู้แล้ว! แต่ถ้าช้อนเล็กเกินไป รสชาติอาจยังไม่ทั่วถึง... หน้านี้จะแสดงให้เห็นว่า <b>ถ้าช้อนมีขนาดใหญ่พอ (\(n \ge 30\))</b> ผลลัพธ์ที่ได้จะเสถียร แม่นยำ และมีรูปร่างระฆังคว่ำเสมอ!
+        💡 <b>ปูพื้นฐานใน 1 นาที (หลักการชิมน้ำซุป):</b> ประชากรคือ <b>"น้ำแกงหม้อใหญ่"</b> เราไม่จำเป็นต้องดื่มจนหมดหม้อเพื่อรู้รสชาติ แค่ใช้ช้อนตักมาชิม <b>(สุ่มตัวอย่างขนาด \(n\))</b> ก็พอ! แต่ถ้าช้อนเล็กไป รสชาติอาจยังไม่ทั่วถึง... หน้านี้จะแสดงให้เห็นว่า <b>ถ้าช้อนมีขนาดใหญ่พอ (\(n \ge 30\))</b> ค่าเฉลี่ยที่ได้จะเสถียร แม่นยำ และกลายเป็นรูประฆังคว่ำเสมอ!
     </div>
 
     <div class="grid-layout">
-        <!-- Sidebar แผงควบคุมที่พิมพ์ได้เอง -->
         <div class="sidebar">
             <h3 style="margin-top:0; color: var(--primary); font-size: 16px;">⚙️ กำหนดค่าพารามิเตอร์</h3>
 
             <div class="form-group">
                 <label>1. เลือกลักษณะของประชากรเดิม:</label>
-                <select id="distSelect" onchange="changeDistUI(); runSim();">
-                    <option value="normal">การแจกแจงปกติ (Normal Distribution)</option>
+                <select id="distSelect" onchange="changeDistUI(); runSim(); updateExampleByDist();">
+                    <option value="normal">การแจกแจงปกติ (Normal - ระฆังคว่ำ)</option>
                     <option value="skewed" selected>เบ้ขวาจัด (Skewed - Exponential)</option>
                     <option value="uniform">สม่ำเสมอเท่ากันหมด (Uniform)</option>
                     <option value="bimodal">สองยอด (Bimodal - ปนกัน 2 กลุ่ม)</option>
                 </select>
 
-                <!-- แผงสำหรับพิมพ์ตัวเลขพารามิเตอร์ของแต่ละรูปแบบได้เอง -->
-                <div id="paramControlBox" class="param-sub-box">
-                    <!-- จะถูกเติมอัตโนมัติด้วย JavaScript ตามที่เลือก -->
-                </div>
-
+                <div id="paramControlBox" class="param-sub-box"></div>
                 <div id="distExpl" class="dist-explain-box">กำลังโหลดคำอธิบาย...</div>
             </div>
 
-            <!-- ขนาดตัวอย่าง n: ทั้งพิมพ์และเลื่อนได้ -->
             <div class="form-group">
                 <label>
                     2. ขนาดตัวอย่างในแต่ละชุด 
                     (<span class="math-tag" tabindex="0">n
-                        <span class="tooltip-card"><b>ขนาดตัวอย่าง (n):</b> จำนวนข้อมูลที่เราสุ่มตักขึ้นมาคำนวณค่าเฉลี่ยใน 1 รอบ เช่น สุ่มสัมภาษณ์คน 30 คนต่อรอบ</span>
+                        <span class="tooltip-card"><b>ขนาดตัวอย่าง (n):</b> จำนวนข้อมูลที่เราสุ่มตักขึ้นมาคำนวณค่าเฉลี่ยใน 1 รอบ เช่น สุ่มคนมา 30 คน</span>
                     </span>):
                 </label>
                 <div class="dual-control">
@@ -363,7 +103,6 @@
                 <small style="color:#627d98; font-size:11.5px;">พิมพ์ตัวเลขหรือเลื่อนสไลเดอร์เพื่อดูทฤษฎี CLT</small>
             </div>
 
-            <!-- จำนวนรอบ k: ทั้งพิมพ์และเลื่อนได้ -->
             <div class="form-group">
                 <label>
                     3. จำนวนชุดที่สุ่มซ้ำ 
@@ -379,12 +118,11 @@
 
             <hr style="border:0; border-top: 1px dashed var(--border-color); margin: 18px 0;">
 
-            <!-- ส่วนคำนวณโจทย์สด -->
             <div class="form-group">
                 <label>
                     🧮 คำนวณความน่าจะเป็น:
                     <span class="math-tag" tabindex="0">P(X̄ > c)
-                        <span class="tooltip-card"><b>P(X̄ > c):</b> ความน่าจะเป็นที่ค่าเฉลี่ยของกลุ่มตัวอย่างที่สุ่มได้ จะมีค่าเกินกว่าเกณฑ์ c ที่เรากำหนด</span>
+                        <span class="tooltip-card"><b>P(X̄ > c):</b> ความน่าจะเป็นที่ค่าเฉลี่ยของกลุ่มตัวอย่างที่สุ่มได้ จะมีค่าเกินกว่าเกณฑ์ c</span>
                     </span>
                 </label>
                 <label style="font-weight: normal; font-size: 12px; margin-bottom: 4px;">พิมพ์ระบุเกณฑ์ที่สนใจ (c):</label>
@@ -393,13 +131,12 @@
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="main-content">
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-label">
                         <span class="math-tag" tabindex="0">μ (มิว)
-                            <span class="tooltip-card"><b>μ (Population Mean):</b> ค่าเฉลี่ยที่แท้จริงของประชากรทั้งหมด (ความจริงสมบูรณ์)</span>
+                            <span class="tooltip-card"><b>μ (Population Mean):</b> ค่าเฉลี่ยที่แท้จริงของประชากรทั้งหมด</span>
                         </span>
                     </div>
                     <div class="metric-val" id="popMeanVal">0.00</div>
@@ -417,7 +154,7 @@
                 <div class="metric-card">
                     <div class="metric-label">
                         <span class="math-tag" tabindex="0">SE ทฤษฎี (σ/√n)
-                            <span class="tooltip-card"><b>Standard Error:</b> σ / √n คือความคลาดเคลื่อนมาตรฐาน ยิ่ง n ใหญ่ SE จะยิ่งเล็กลง ค่าสุ่มยิ่งแม่นยำ</span>
+                            <span class="tooltip-card"><b>Standard Error:</b> σ / √n คือความคลาดเคลื่อนมาตรฐาน ยิ่ง n ใหญ่ SE จะยิ่งเล็กลง</span>
                         </span>
                     </div>
                     <div class="metric-val" id="theoSEVal">0.00</div>
@@ -447,44 +184,15 @@
                 </div>
             </div>
 
-            <!-- กล่องทดลอง 3 สเต็ป -->
-            <div class="learn-box" style="background:#f8fafc; border-left: 4px solid var(--accent);">
-                <h4 style="margin: 0 0 10px 0;">🧪 3 สเต็ปทดลองเล่นเพื่อเข้าใจทฤษฎี CLT:</h4>
-                <ol style="margin: 0; padding-left: 20px; font-size: 13.5px; line-height: 1.7;">
-                    <li>เลือกประชากรเป็น <b>"เบ้ขวาจัด"</b> แล้วพิมพ์หรือเลื่อน \(n = 1\) ➔ กราฟขวาจะมีรูปร่างเบ้ตามประชากรเด๊ะๆ</li>
-                    <li>ลองพิมพ์ \(n = 30\) หรือ \(50\) ➔ สังเกตว่ากราฟขวาจะเริ่มดัดตัวเองกลายเป็น <b>รูประฆังคว่ำสมมาตร</b> อัตโนมัติ (นี่คือ Central Limit Theorem!)</li>
-                    <li>ลองพิมพ์ \(n = 100\) ➔ สังเกตว่าระฆังคว่ำจะบีบตัวแคบลงเรื่อยๆ แปลว่ายิ่งสุ่มเยอะ ความผิดพลาดยิ่งลดลง</li>
-                </ol>
-            </div>
-
-            <!-- กล่องตัวอย่างโจทย์จริง -->
+            <!-- กล่องตัวอย่างโจทย์จริงที่จะเปลี่ยนอัตโนมัติตามประเภทกราฟที่เลือก -->
             <div class="example-box">
-                <h3 style="margin: 0 0 8px 0; color: #166534; font-size: 17px;">
-                    🧋 ตัวอย่างโจทย์จริง: การสุ่มตรวจน้ำหนักชานมไข่มุก (พร้อมภาพประกอบ)
-                </h3>
-                <p style="margin: 0; font-size: 13.5px;">
-                    <b>สถานการณ์:</b> ร้านชานมระบุว่าน้ำหนักเฉลี่ยของแก้วคือ \(\mu = 500\) กรัม ส่วนเบี่ยงเบนมาตรฐาน \(\sigma = 20\) กรัม หากผู้จัดการร้านสุ่มตรวจชานมจำนวน \(n = 25\) แก้ว จงหาความน่าจะเป็นที่น้ำหนักเฉลี่ยของกลุ่มตัวอย่างนี้จะมากกว่า \(508\) กรัม หรือหาค่า \(P(\bar{X} > 508)\)?
-                </p>
+                <h3 id="exTitle" style="margin: 0 0 8px 0; color: #166534; font-size: 17px;"></h3>
+                <p id="exScenario" style="margin: 0; font-size: 13.5px;"></p>
 
                 <div class="example-grid">
-                    <div class="example-solution">
-                        <b>📝 เฉลยขั้นตอนวิธีคิดอย่างละเอียด:</b><br>
-                        <b>ขั้นที่ 1: คำนวณความคลาดเคลื่อนมาตรฐาน (SE)</b><br>
-                        \[ SE = \frac{\sigma}{\sqrt{n}} = \frac{20}{\sqrt{25}} = \frac{20}{5} = 4 \text{ กรัม} \]
-                        <small style="color:#166534;">(แปลว่าค่าเฉลี่ยของกลุ่มตัวอย่างจะแกว่งรอบๆ 500 อยู่ประมาณ ±4 กรัม)</small><br><br>
-
-                        <b>ขั้นที่ 2: แปลงเป็นคะแนนมาตรฐาน Z-score</b><br>
-                        \[ Z = \frac{\bar{X} - \mu}{SE} = \frac{508 - 500}{4} = \frac{8}{4} = +2.00 \]
-                        
-                        <b>ขั้นที่ 3: เปิดตารางหาความน่าจะเป็น</b><br>
-                        จากตารางการแจกแจงปกติมาตรฐาน พื้นที่ฝั่งขวาที่ \(Z > 2.00\) คือ <b>0.0228 หรือ 2.28%</b><br><br>
-                        <b>💡 สรุปความหมาย:</b> โอกาสที่ผู้จัดการจะสุ่มเจอชานม 25 แก้วที่มีน้ำหนักเฉลี่ยสูงเกิน 508 กรัม มีเพียงแค่ <b>2.28%</b> เท่านั้น (เป็นเหตุการณ์ที่เกิดขึ้นได้ยากมาก)
-                    </div>
-
+                    <div id="exSolution" class="example-solution"></div>
                     <div class="example-chart">
-                        <div style="font-size: 12px; font-weight: bold; color: #166534; margin-bottom: 5px;">
-                            แผนภาพการแจกแจงของน้ำหนักเฉลี่ย (\(\bar{X}\))
-                        </div>
+                        <div id="exPlotTitle" style="font-size: 12px; font-weight: bold; color: #166534; margin-bottom: 5px;"></div>
                         <div id="examplePlot" style="height: 230px;"></div>
                     </div>
                 </div>
@@ -499,13 +207,126 @@
     let currentTheoSE = 0;
 
     const distInfoData = {
-        normal: "<b>📌 รูปร่าง:</b> ระฆังคว่ำสมบูรณ์ ข้อมูล 68% กองอยู่รอบค่าเฉลี่ย<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดจากปรากฏการณ์ธรรมชาติที่มีปัจจัยสุ่มเล็กๆ หลายตัวส่งผลร่วมกัน<br><b>🏢 ตัวอย่างจริง:</b> <i>ส่วนสูงของนักศึกษา</i>, <i>น้ำหนักของผลส้ม</i>, <i>คะแนนสอบมาตรฐานระดับประเทศ</i>",
-        skewed: "<b>📌 รูปร่าง:</b> หางยื่นยาวไปทางขวา ข้อมูลส่วนใหญ่กองอยู่ฝั่งซ้าย (ค่าน้อย)<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดเมื่อข้อมูลมีขีดจำกัดล่างที่ 0 แต่ไม่มีขีดจำกัดบน<br><b>🏢 ตัวอย่างจริง:</b> <i>รายได้ของคนไทย</i> (คนส่วนใหญ่เงินเดือน 15,000-30,000 บาท มีมหาเศรษฐีไม่กี่คนดึงหางยาวไปหลักล้าน), <i>ระยะเวลารอคอยอาหาร</i>",
-        uniform: "<b>📌 รูปร่าง:</b> สี่เหลี่ยมผืนผ้าแบนราบ ทุกตัวเลขมีโอกาสเกิดเท่ากันหมด<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดจากระบบที่ถูกออกแบบให้มีความน่าจะเป็นเท่ากันทุกจุด<br><b>🏢 ตัวอย่างจริง:</b> <i>การทอดลูกเต๋า 1-6</i>, <i>การจับฉลากหมายเลข</i>, <i>นาทีที่ลูกค้าเดินเข้าร้านสะดวกซื้อแบบสุ่ม</i>",
-        bimodal: "<b>📌 รูปร่าง:</b> มีภูเขา 2 ลูก (ยอดคู่) มีร่องตรงกลาง<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดจากการนำข้อมูลของประชากร 2 กลุ่มที่มีพฤติกรรมต่างกันมารวมในชุดเดียวกัน<br><b>🏢 ตัวอย่างจริง:</b> <i>ยอดขายร้านอาหาร</i> (มียอดสูงตอนเที่ยงและเย็น บ่ายแทบไม่มีคน), <i>ส่วนสูงประชากรเมื่อรวมชายและหญิงเข้าด้วยกัน</i>"
+        normal: "<b>📌 รูปร่าง:</b> ระฆังคว่ำสมบูรณ์ ข้อมูล 68% กองอยู่รอบค่าเฉลี่ย<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดจากปรากฏการณ์ธรรมชาติที่มีปัจจัยสุ่มเล็กๆ หลายตัวส่งผลร่วมกัน<br><b>🏢 ตัวอย่างจริง:</b> ส่วนสูง, น้ำหนักสินค้า, คะแนนสอบมาตรฐาน",
+        skewed: "<b>📌 รูปร่าง:</b> หางยื่นยาวไปทางขวา ข้อมูลส่วนใหญ่กองอยู่ฝั่งซ้าย (ค่าน้อย)<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดเมื่อข้อมูลมีขีดจำกัดล่างที่ 0 แต่ไม่มีขีดจำกัดบน<br><b>🏢 ตัวอย่างจริง:</b> รายได้คนไทย, ระยะเวลารอคอยบริการ/รออาหาร",
+        uniform: "<b>📌 รูปร่าง:</b> แบนราบเป็นกล่อง ทุกตัวเลขมีโอกาสเกิดเท่ากันหมด<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดจากระบบที่ถูกสุ่มอย่างยุติธรรมไม่มีค่าใดได้เปรียบ<br><b>🏢 ตัวอย่างจริง:</b> การทอดลูกเต๋า 1-6, การหมุนวงล้อตัวเลข",
+        bimodal: "<b>📌 รูปร่าง:</b> มีภูเขา 2 ลูก (ยอดคู่) มีร่องตรงกลาง<br><b>🔍 ทำไมถึงเป็นแบบนี้:</b> เกิดจากการนำข้อมูลของ 2 กลุ่มที่มีพฤติกรรมต่างกันมารวมในชุดเดียวกัน<br><b>🏢 ตัวอย่างจริง:</b> ยอดขายร้านอาหาร (เที่ยง/เย็น), ส่วนสูงรวมชายหญิง"
     };
 
-    // อัปเดตช่องให้พิมพ์พารามิเตอร์ตามประเภทการแจกแจงที่เลือก
+    // ฐานข้อมูลตัวอย่างโจทย์จริง 4 รูปแบบ
+    const dynamicExamples = {
+        normal: {
+            title: "🧋 ตัวอย่างกรณีประชากรปกติ: การสุ่มตรวจน้ำหนักชานมไข่มุก",
+            scenario: "<b>สถานการณ์:</b> โรงงานผลิตชานมระบุว่าน้ำหนักเฉลี่ยคือ \\(\\mu = 500\\) กรัม ส่วนเบี่ยงเบนมาตรฐาน \\(\\sigma = 20\\) กรัม หากผู้จัดการสุ่มตรวจชานมจำนวน \\(n = 25\\) แก้ว จงหาความน่าจะเป็นที่น้ำหนักเฉลี่ยจะมากกว่า \\(508\\) กรัม หรือหา \\(P(\\bar{X} > 508)\\)?",
+            solution: `<b>📝 ขั้นตอนวิธีคิดอย่างละเอียด:</b><br>
+                <b>ขั้นที่ 1: หาความคลาดเคลื่อนมาตรฐาน (SE)</b><br>
+                \\[ SE = \\frac{\\sigma}{\\sqrt{n}} = \\frac{20}{\\sqrt{25}} = \\frac{20}{5} = 4 \\text{ กรัม} \\]<br>
+                <b>ขั้นที่ 2: แปลงเป็นคะแนนมาตรฐาน Z</b><br>
+                \\[ Z = \\frac{\\bar{X} - \\mu}{SE} = \\frac{508 - 500}{4} = +2.00 \\]<br>
+                <b>ขั้นที่ 3: เปิดตารางหาความน่าจะเป็น</b><br>
+                พื้นที่ทางขวาที่ \\(Z > 2.00\\) มีค่าเท่ากับ <b>2.28%</b><br>
+                <b>💡 สรุป:</b> มีโอกาสเพียง 2.28% เท่านั้นที่จะสุ่มได้แก้วที่ได้น้ำหนักเฉลี่ยเกิน 508 กรัม`,
+            plotTitle: "แผนภาพการแจกแจงน้ำหนักเฉลี่ย (X̄)",
+            mu: 500, se: 4, cutoff: 508, range: [485, 515]
+        },
+        skewed: {
+            title: "⏱️ ตัวอย่างกรณีประชากรเบ้ขวา: ระยะเวลารอคิวที่ธนาคาร",
+            scenario: "<b>สถานการณ์:</b> ระยะเวลารอคิวของลูกค้าในธนาคารมีการแจกแจงแบบเบ้ขวาจัด มีเวลาเฉลี่ย \\(\\mu = 15\\) นาที ส่วนเบี่ยงเบนมาตรฐาน \\(\\sigma = 12\\) นาที หากผู้จัดการสุ่มลูกค้ามา \\(n = 36\\) คน จงหาความน่าจะเป็นที่เวลารอคอยเฉลี่ยจะเกิน \\(18\\) นาที หรือหา \\(P(\\bar{X} > 18)\\)?",
+            solution: `<b>📝 ขั้นตอนวิธีคิดอย่างละเอียด:</b><br>
+                <b>ขั้นที่ 1: ตรวจสอบทฤษฎี CLT</b><br>
+                แม้ประชากรเดิมจะเบ้ขวาจัด แต่ขนาดตัวอย่าง \\(n = 36 \\ge 30\\) การแจกแจงของ \\(\\bar{X}\\) จึงกลายเป็น<b>โค้งปกติ</b>ได้ตาม CLT!<br><br>
+                <b>ขั้นที่ 2: หา SE และแปลงเป็นค่า Z</b><br>
+                \\[ SE = \\frac{\\sigma}{\\sqrt{n}} = \\frac{12}{\\sqrt{36}} = \\frac{12}{6} = 2 \\text{ นาที} \\]<br>
+                \\[ Z = \\frac{18 - 15}{2} = \\frac{3}{2} = +1.50 \\]<br>
+                <b>ขั้นที่ 3: เปิดตารางหาพื้นที่</b> พื้นที่ที่ \\(Z > 1.50\\) คือ <b>6.68%</b><br>
+                <b>💡 สรุป:</b> โอกาสที่กลุ่มลูกค้า 36 คนจะรอเฉลี่ยเกิน 18 นาที มีเพียง 6.68%`,
+            plotTitle: "แผนภาพเวลารอคอยเฉลี่ย (X̄)",
+            mu: 15, se: 2, cutoff: 18, range: [8, 22]
+        },
+        uniform: {
+            title: "🎲 ตัวอย่างกรณีประชากรสม่ำเสมอ: การทอดลูกเต๋าเสี่ยงโชค",
+            scenario: "<b>สถานการณ์:</b> การทอดลูกเต๋า 1 ลูก แต้ม 1-6 มีโอกาสเกิดเท่ากัน มีแต้มเฉลี่ย \\(\\mu = 3.5\\) และ \\(\\sigma = 1.71\\) หากผู้เล่นทอดลูกเต๋าจำนวน \\(n = 49\\) ครั้ง จงหาโอกาสที่แต้มเฉลี่ยรวมจะสูงเกิน \\(3.9\\) หรือหา \\(P(\\bar{X} > 3.9)\\)?",
+            solution: `<b>📝 ขั้นตอนวิธีคิดอย่างละเอียด:</b><br>
+                <b>ขั้นที่ 1: นำ CLT มาประยุกต์ใช้</b><br>
+                การทอดลูกเต๋าแบนราบ แต่เมื่อทอดซ้ำถึง 49 ครั้ง (\\(n \\ge 30\\)) แต้มเฉลี่ยจะกลายเป็นรูประฆังคว่ำสมบูรณ์<br><br>
+                <b>ขั้นที่ 2: คำนวณ SE และ Z-Score</b><br>
+                \\[ SE = \\frac{1.71}{\\sqrt{49}} = \\frac{1.71}{7} \\approx 0.244 \\]<br>
+                \\[ Z = \\frac{3.9 - 3.5}{0.244} = \\frac{0.4}{0.244} \\approx +1.64 \\]<br>
+                <b>ขั้นที่ 3: หาความน่าจะเป็น</b> พื้นที่ทางขวาที่ \\(Z > 1.64\\) คือประมาณ <b>5.05%</b><br>
+                <b>💡 สรุป:</b> โอกาสที่จะทอดลูกเต๋า 49 ครั้งแล้วได้แต้มเฉลี่ยสูงเกิน 3.9 มีเพียงประมาณ 5% เท่านั้น`,
+            plotTitle: "แผนภาพแต้มเฉลี่ยจากการทอด 49 ครั้ง",
+            mu: 3.5, se: 0.244, cutoff: 3.9, range: [2.5, 4.5]
+        },
+        bimodal: {
+            title: "🍽️ ตัวอย่างกรณีประชากรสองยอด: บิลค่าอาหารมื้อเที่ยงและมื้อเย็น",
+            scenario: "<b>สถานการณ์:</b> ยอดบิลร้านอาหารมี 2 ยอด (มื้อเที่ยงกินคนเดียวเฉลี่ย 80 บาท มื้อเย็นกินเป็นกลุ่มเฉลี่ย 300 บาท) ค่าเฉลี่ยรวมของร้านคือ \\(\\mu = 190\\) บาท มี \\(\\sigma = 110\\) บาท ถ้าสุ่มตรวจบิลมา \\(n = 64\\) ใบ จงหาโอกาสที่บิลเฉลี่ยจะเกิน \\(210\\) บาท?",
+            solution: `<b>📝 ขั้นตอนวิธีคิดอย่างละเอียด:</b><br>
+                <b>ขั้นที่ 1: พลังของ CLT เหนือกราฟสองยอด</b><br>
+                แม้ประชากรจะมียอดเขา 2 ลูก แต่เมื่อสุ่มตัวอย่างขนาดใหญ่ \\(n = 64\\) ยอดเขาทั้งสองจะรวมศูนย์กลายเป็นระฆังคว่ำลูกเดียวตรงกลาง!<br><br>
+                <b>ขั้นที่ 2: คำนวณ SE และแปลงค่า Z</b><br>
+                \\[ SE = \\frac{110}{\\sqrt{64}} = \\frac{110}{8} = 13.75 \\text{ บาท} \\]<br>
+                \\[ Z = \\frac{210 - 190}{13.75} = \\frac{20}{13.75} \\approx +1.45 \\]<br>
+                <b>ขั้นที่ 3: หาพื้นที่</b> พื้นที่ \\(Z > 1.45\\) เท่ากับ <b>7.35%</b><br>
+                <b>💡 สรุป:</b> โอกาสที่บิลเฉลี่ย 64 ใบจะสูงเกิน 210 บาท มีเพียง 7.35%`,
+            plotTitle: "แผนภาพยอดบิลเฉลี่ย (X̄)",
+            mu: 190, se: 13.75, cutoff: 210, range: [140, 240]
+        }
+    };
+
+    function updateExampleByDist() {
+        const type = document.getElementById('distSelect').value;
+        const ex = dynamicExamples[type];
+
+        document.getElementById('exTitle').innerHTML = ex.title;
+        document.getElementById('exScenario').innerHTML = ex.scenario;
+        document.getElementById('exSolution').innerHTML = ex.solution;
+        document.getElementById('exPlotTitle').innerText = ex.plotTitle;
+
+        // วาดกราฟประกอบตัวอย่างโจทย์
+        let x = [];
+        let y = [];
+        const step = (ex.range[1] - ex.range[0]) / 150;
+        for (let v = ex.range[0]; v <= ex.range[1]; v += step) {
+            x.push(v);
+            y.push(jStat.normal.pdf(v, ex.mu, ex.se));
+        }
+
+        let xFill = x.filter(v => v >= ex.cutoff);
+        let yFill = xFill.map(v => jStat.normal.pdf(v, ex.mu, ex.se));
+
+        Plotly.newPlot('examplePlot', [
+            {
+                x: x, y: y,
+                type: 'scatter', mode: 'lines',
+                line: { color: '#16a34a', width: 2 },
+                name: 'การแจกแจง X̄'
+            },
+            {
+                x: [ex.cutoff, ...xFill, xFill[xFill.length - 1]],
+                y: [0, ...yFill, 0],
+                fill: 'toself',
+                fillcolor: 'rgba(234, 88, 12, 0.45)',
+                line: { color: 'transparent' }
+            }
+        ], {
+            margin: { t: 15, r: 10, l: 30, b: 30 },
+            xaxis: { title: 'ค่าเฉลี่ยตัวอย่าง (X̄)' },
+            yaxis: { showticklabels: false },
+            showlegend: false,
+            shapes: [
+                {
+                    type: 'line',
+                    x0: ex.cutoff, y0: 0, x1: ex.cutoff, y1: jStat.normal.pdf(ex.cutoff, ex.mu, ex.se),
+                    line: { color: '#ea580c', width: 2, dash: 'dash' }
+                }
+            ]
+        }, { responsive: true, displayModeBar: false });
+
+        if (window.MathJax && MathJax.typeset) {
+            MathJax.typeset(["#exScenario", "#exSolution"]);
+        }
+    }
+
     function changeDistUI() {
         const type = document.getElementById('distSelect').value;
         const box = document.getElementById('paramControlBox');
@@ -522,16 +343,13 @@
                         <label style="font-size:12px;">ส่วนเบี่ยงเบน (σ):</label>
                         <input type="number" id="normStd" value="10" min="1" step="1" oninput="runSim()">
                     </div>
-                </div>
-            `;
+                </div>`;
         } else if (type === 'skewed') {
             box.innerHTML = `
                 <div>
                     <label style="font-size:12px;">Scale (λ หรือค่าเฉลี่ยช่วงเวลา):</label>
                     <input type="number" id="expoScale" value="5" min="0.5" step="0.5" oninput="runSim()">
-                    <small style="color:#666; font-size:11px;">ยิ่งใส่เลขมาก ข้อมูลยิ่งทอดยาวไปทางขวา</small>
-                </div>
-            `;
+                </div>`;
         } else if (type === 'uniform') {
             box.innerHTML = `
                 <div class="inline-inputs">
@@ -543,8 +361,7 @@
                         <label style="font-size:12px;">ค่าสูงสุด (b):</label>
                         <input type="number" id="uniMax" value="90" step="1" oninput="runSim()">
                     </div>
-                </div>
-            `;
+                </div>`;
         } else if (type === 'bimodal') {
             box.innerHTML = `
                 <div class="inline-inputs">
@@ -556,8 +373,7 @@
                         <label style="font-size:12px;">ยอดที่ 2 (μ₂):</label>
                         <input type="number" id="biMu2" value="70" step="1" oninput="runSim()">
                     </div>
-                </div>
-            `;
+                </div>`;
         }
     }
 
@@ -618,22 +434,17 @@
         document.getElementById('theoSEVal').innerText = theoSE.toFixed(2);
         document.getElementById('simSEVal').innerText = simSE.toFixed(2);
 
-        // 1. กราฟประชากร
         Plotly.newPlot('popChart', [{
             x: pop.slice(0, 3000),
             type: 'histogram',
             histnorm: 'probability density',
-            marker: {
-                color: '#4A90E2',
-                line: { color: '#102a43', width: 1.2 }
-            }
+            marker: { color: '#4A90E2', line: { color: '#102a43', width: 1.2 } }
         }], {
             margin: { t: 10, r: 10, l: 35, b: 35 },
             xaxis: { title: 'ค่าของตัวแปร (X)' },
             yaxis: { title: 'ความหนาแน่น' }
         }, { responsive: true, displayModeBar: false });
 
-        // เส้นโค้งปกติทางทฤษฎี
         let minX = Math.min(...means);
         let maxX = Math.max(...means);
         let curveX = [];
@@ -643,16 +454,12 @@
             curveY.push(jStat.normal.pdf(x, popMean, theoSE));
         }
 
-        // 2. กราฟค่าเฉลี่ยตัวอย่าง
         Plotly.newPlot('sampleChart', [
             {
                 x: means,
                 type: 'histogram',
                 histnorm: 'probability density',
-                marker: {
-                    color: '#50E3C2',
-                    line: { color: '#0d7a63', width: 1.2 }
-                },
+                marker: { color: '#50E3C2', line: { color: '#0d7a63', width: 1.2 } },
                 name: 'จากการสุ่มจริง'
             },
             {
@@ -689,63 +496,9 @@
         }
     }
 
-    function drawExamplePlot() {
-        const mu = 500;
-        const se = 4;
-        let x = [];
-        let y = [];
-        for (let v = 485; v <= 515; v += 0.2) {
-            x.push(v);
-            y.push(jStat.normal.pdf(v, mu, se));
-        }
-
-        let xFill = x.filter(v => v >= 508);
-        let yFill = xFill.map(v => jStat.normal.pdf(v, mu, se));
-
-        Plotly.newPlot('examplePlot', [
-            {
-                x: x, y: y,
-                type: 'scatter', mode: 'lines',
-                line: { color: '#166534', width: 2 },
-                name: 'การแจกแจง X̄'
-            },
-            {
-                x: [508, ...xFill, xFill[xFill.length - 1]],
-                y: [0, ...yFill, 0],
-                fill: 'toself',
-                fillcolor: 'rgba(234, 88, 12, 0.45)',
-                line: { color: 'transparent' },
-                name: 'P(X̄ > 508) = 2.28%'
-            }
-        ], {
-            margin: { t: 15, r: 10, l: 30, b: 30 },
-            xaxis: { title: 'น้ำหนักเฉลี่ย (กรัม)' },
-            yaxis: { showticklabels: false },
-            showlegend: false,
-            shapes: [
-                {
-                    type: 'line',
-                    x0: 508, y0: 0, x1: 508, y1: jStat.normal.pdf(508, mu, se),
-                    line: { color: '#ea580c', width: 2, dash: 'dash' }
-                }
-            ],
-            annotations: [
-                {
-                    x: 509, y: 0.02,
-                    text: '2.28%',
-                    showarrow: true,
-                    arrowhead: 2,
-                    ax: 20, ay: -20,
-                    font: { color: '#ea580c', size: 12, weight: 'bold' }
-                }
-            ]
-        }, { responsive: true, displayModeBar: false });
-    }
-
-    // เริ่มระบบ
     changeDistUI();
     runSim();
-    drawExamplePlot();
+    updateExampleByDist();
 </script>
 
 </body>
